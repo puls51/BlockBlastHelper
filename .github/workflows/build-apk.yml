@@ -1,3 +1,4 @@
+
 name: Build Block Blast APK
 
 on:
@@ -21,7 +22,10 @@ jobs:
           gradle-version: "8.9"
 
       - name: Extract project
-            - name: Fix JVM targets
+        run: |
+          unzip -q BlockBlastHelper-starter.zip -d project
+
+      - name: Fix JVM targets
         run: |
           python3 - <<'PY'
           p = "project/app/build.gradle.kts"
@@ -32,8 +36,6 @@ jobs:
           )
           open(p, "w").write(s)
           PY
-        run: |
-          unzip -q BlockBlastHelper-starter.zip -d project
 
       - name: Build APK
         run: gradle -p project --no-daemon assembleDebug
