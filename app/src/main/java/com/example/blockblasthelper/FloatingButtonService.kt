@@ -29,7 +29,7 @@ class FloatingButtonService : Service() {
     private var mediaProjection: MediaProjection? = null
     private var virtualDisplay: VirtualDisplay? = null
     private var imageReader: ImageReader? = null
-
+    private var firstFrameShown = false
     override fun onStartCommand(
         intent: Intent?,
         flags: Int,
@@ -159,26 +159,27 @@ class FloatingButtonService : Service() {
         )
 
         imageReader?.setOnImageAvailableListener(
-            { reader ->
-                val image = reader.acquireLatestImage()
-                image?.close()
-            },
-            Handler(Looper.getMainLooper())
-        )
+    { reader ->
+        val image = reader.acquireLatestImage()
 
-        mediaProjection?.registerCallback(
-            object : MediaProjection.Callback() {
-                override fun onStop() {
-                    virtualDisplay?.release()
-                    virtualDisplay = null
-                    imageReader?.close()
-                    imageReader = null
-                    mediaProjection = null
-                    stopForeground(STOP_FOREGROUND_REMOVE)
+        if (image != null) {
+            if (!firstFrameShown) {
+                firstFrameShown = true
+
+                android.os.Handler(Looper.getMainLooper()).post {
+                    android.widget.Toast.makeText(
+                        this,
+                        "Первый кадр экрана получен!",
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
                 }
-            },
-            Handler(Looper.getMainLooper())
-        )
+            }
+
+            image.close()
+        }
+    },
+    Handler(Looper.getMainLooper())
+)
 
         virtualDisplay = mediaProjection?.createVirtualDisplay(
             "BlockBlastCapture",
