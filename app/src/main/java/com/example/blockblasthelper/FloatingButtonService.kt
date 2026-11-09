@@ -27,10 +27,11 @@ class FloatingButtonService : Service() {
         val button = Button(this).apply {
             text = "Анализ"
             textSize = 14f
+
             setOnClickListener {
                 Toast.makeText(
                     this@FloatingButtonService,
-                    "Анализ поля будет добавлен следующим этапом",
+                    "Запрос захвата экрана будет запущен",
                     Toast.LENGTH_SHORT
                 ).show()
             }
