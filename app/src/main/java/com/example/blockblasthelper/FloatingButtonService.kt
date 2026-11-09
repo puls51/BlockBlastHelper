@@ -8,11 +8,14 @@ import android.view.Gravity
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.Toast
+import android.content.Context
+import android.media.projection.MediaProjectionManager
 
 class FloatingButtonService : Service() {
 
     private var windowManager: WindowManager? = null
     private var floatingButton: Button? = null
+    private var projectionManager: MediaProjectionManager? = null
 
     override fun onStartCommand(
         intent: Intent?,
