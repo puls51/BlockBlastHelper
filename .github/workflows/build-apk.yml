@@ -21,6 +21,17 @@ jobs:
           gradle-version: "8.9"
 
       - name: Extract project
+            - name: Fix JVM targets
+        run: |
+          python3 - <<'PY'
+          p = "project/app/build.gradle.kts"
+          s = open(p).read()
+          s = s.replace(
+              '    defaultConfig {',
+              '    compileOptions {\n        sourceCompatibility = JavaVersion.VERSION_17\n        targetCompatibility = JavaVersion.VERSION_17\n    }\n    kotlinOptions { jvmTarget = "17" }\n    defaultConfig {'
+          )
+          open(p, "w").write(s)
+          PY
         run: |
           unzip -q BlockBlastHelper-starter.zip -d project
 
