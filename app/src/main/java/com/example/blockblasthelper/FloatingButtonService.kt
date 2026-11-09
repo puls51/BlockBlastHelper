@@ -29,12 +29,15 @@ class FloatingButtonService : Service() {
             textSize = 14f
 
             setOnClickListener {
-                Toast.makeText(
-                    this@FloatingButtonService,
-                    "Запрос захвата экрана будет запущен",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+    val intent = Intent(
+        this@FloatingButtonService,
+        MainActivity::class.java
+    ).apply {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        putExtra("request_capture", true)
+    }
+    startActivity(intent)
+}
         }
 
         val params = WindowManager.LayoutParams(
