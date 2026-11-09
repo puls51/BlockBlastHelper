@@ -39,13 +39,15 @@ class MainActivity : Activity() {
             text = "Включить плавающую кнопку"
             setOnClickListener {
                 if (Settings.canDrawOverlays(this@MainActivity)) {
-                    startService(Intent(this@MainActivity, FloatingButtonService::class.java))
+                    startService(
+                        Intent(this@MainActivity, FloatingButtonService::class.java)
+                    )
                 } else {
-                    val intent = Intent(
+                    val settingsIntent = Intent(
                         Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:$packageName")
                     )
-                    startActivity(intent)
+                    startActivity(settingsIntent)
                 }
             }
         }
@@ -57,6 +59,32 @@ class MainActivity : Activity() {
         if (intent.getBooleanExtra("request_capture", false)) {
             val captureIntent = projectionManager.createScreenCaptureIntent()
             startActivityForResult(captureIntent, 1001)
+        }
+    }
+
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 1001 && resultCode == RESULT_OK && data != null) {
+            val serviceIntent = Intent(
+                this,
+                FloatingButtonService::class.java
+            ).apply {
+                putExtra("resultCode", resultCode)
+                putExtra("data", data)
+            }
+
+            startService(serviceIntent)
+
+            Toast.makeText(
+                this,
+                "Разрешение получено",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }
