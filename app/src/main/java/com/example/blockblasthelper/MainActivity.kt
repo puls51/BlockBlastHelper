@@ -53,5 +53,10 @@ class MainActivity : Activity() {
         layout.addView(title)
         layout.addView(button)
         setContentView(layout)
+
+        if (intent.getBooleanExtra("request_capture", false)) {
+            val captureIntent = projectionManager.createScreenCaptureIntent()
+            startActivityForResult(captureIntent, 1001)
+        }
     }
 }
