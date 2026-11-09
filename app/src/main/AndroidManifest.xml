@@ -3,8 +3,7 @@
 
     <service
     android:name=".FloatingButtonService"
-    android:exported="false" />
-    <application
+    android:exported="false" /><application
         android:theme="@android:style/Theme.Material.Light.NoActionBar"
         android:label="Block Blast Helper"
         android:allowBackup="false">
