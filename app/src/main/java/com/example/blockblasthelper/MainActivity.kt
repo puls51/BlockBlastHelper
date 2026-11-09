@@ -1,10 +1,12 @@
 package com.example.blockblasthelper
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.provider.Settings
+import android.net.Uri
 import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
@@ -13,8 +15,13 @@ import android.widget.Toast
 
 class MainActivity : Activity() {
 
+    private lateinit var projectionManager: MediaProjectionManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        projectionManager =
+            getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
 
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -32,7 +39,7 @@ class MainActivity : Activity() {
             text = "Включить плавающую кнопку"
             setOnClickListener {
                 if (Settings.canDrawOverlays(this@MainActivity)) {
-                    startFloatingService()
+                    startService(Intent(this@MainActivity, FloatingButtonService::class.java))
                 } else {
                     val intent = Intent(
                         Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -46,16 +53,5 @@ class MainActivity : Activity() {
         layout.addView(title)
         layout.addView(button)
         setContentView(layout)
-    }
-
-    private fun startFloatingService() {
-        startService(
-            Intent(this, FloatingButtonService::class.java)
-        )
-        Toast.makeText(
-            this,
-            "Плавающая кнопка включена",
-            Toast.LENGTH_SHORT
-        ).show()
     }
 }
