@@ -59,15 +59,23 @@ class FloatingButtonService : Service() {
             textSize = 14f
 
             setOnClickListener {
-                val activityIntent = Intent(
-                    this@FloatingButtonService,
-                    MainActivity::class.java
-                ).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    putExtra("request_capture", true)
-                }
+    if (mediaProjection != null) {
+        Toast.makeText(
+            this@FloatingButtonService,
+            "Захват экрана уже активен",
+            Toast.LENGTH_SHORT
+        ).show()
+    } else {
+        val activityIntent = Intent(
+            this@FloatingButtonService,
+            MainActivity::class.java
+        ).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            putExtra("request_capture", true)
+        }
 
-                startActivity(activityIntent)
+        startActivity(activityIntent)
+    }
             }
         }
 
